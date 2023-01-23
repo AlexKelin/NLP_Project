@@ -72,10 +72,11 @@ def tokenize_generate_text(document):
         print()
         a = f'{str(rd.choice(propers_nouns)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
         b = f'{str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(propers_nouns))} {rd.choice(other_verbs)}'
-        c = f'{str(rd.choice(propers_nouns)).capitalize()}, {rd.choice(verbs_lemma)}{rd.choice([".", "!", ","])} {str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(conjunctions))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}? '
+        c = f'{str(rd.choice(propers_nouns)).capitalize()}, {rd.choice(verbs_lemma)}{rd.choice([".", "!", ","])} {str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(conjunctions))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}{rd.choice([".", "!","?"])} '
         d = f'{str(rd.choice(adjectives).capitalize())} {str(rd.choice(nouns))} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
         e = f'{str(rd.choice(adverbs)).capitalize()} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
         print(rd.choice([a, b, c, d, e]))
+    #ASK THE QUESTION ABOUT ANY HERO
 
 
 def main():
