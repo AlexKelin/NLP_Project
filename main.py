@@ -34,9 +34,18 @@ def analyze_file(document):
     print('-' * 110)
 
 
-def tokenize_generate_text(document):
-    sent_num = input('How many sentences would you like to generate from the input?')
-    print('Generating random sentences...')
+def menu_choice(document):
+    print('Please choose an option: \n1. Generate random sentences \n2. Ask about you favorite character')
+    answer = input('Option #: ')
+    if answer == '1' or answer == '2':
+        print('Please wait...')
+        tokenize_generate_text(document, answer)
+    else:
+        print('Please enter a valid option')
+        menu_choice(document)
+
+
+def tokenize_generate_text(document, option):
     banned_list = ['ca', 'wo', 'nor', 'but', 'both']
     nlp = spacy.load("en_core_web_sm")
     nlp.max_length = 1505477
@@ -66,23 +75,46 @@ def tokenize_generate_text(document):
         if len(chunk) > 2:
             if str(chunk[0]) == 'a' or str(chunk[0]) == 'The' or str(chunk[0]) == 'A':
                 phrase.append(chunk)
+    option_1 = f'{str(rd.choice(propers_nouns)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
+    option_2 = f'{str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(propers_nouns))} {rd.choice(other_verbs)}'
+    option_3 = f'{str(rd.choice(propers_nouns)).capitalize()}, {rd.choice(verbs_lemma)}{rd.choice([".", "!", ","])} {str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(conjunctions))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}{rd.choice([".", "!", "?"])} '
+    option_4 = f'{str(rd.choice(adjectives).capitalize())} {str(rd.choice(nouns))} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
+    option_5 = f'{str(rd.choice(adverbs)).capitalize()} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
 
-    print('*' * 60)
-    for i in range(int(sent_num)):
-        print()
-        a = f'{str(rd.choice(propers_nouns)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-        b = f'{str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(propers_nouns))} {rd.choice(other_verbs)}'
-        c = f'{str(rd.choice(propers_nouns)).capitalize()}, {rd.choice(verbs_lemma)}{rd.choice([".", "!", ","])} {str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(conjunctions))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}{rd.choice([".", "!","?"])} '
-        d = f'{str(rd.choice(adjectives).capitalize())} {str(rd.choice(nouns))} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-        e = f'{str(rd.choice(adverbs)).capitalize()} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-        print(rd.choice([a, b, c, d, e]))
-    #ASK THE QUESTION ABOUT ANY HERO
+
+    if option == '1':
+        try:
+            print()
+            print('How many sentences would you like to generate from the input?')
+            sent_num = input()
+            print('Generating random sentences...')
+            for i in range(int(sent_num)):
+                print()
+                print(rd.choice([option_1, option_2, option_3, option_4, option_5]))
+        except:
+            print('Please enter a valid number')
+            tokenize_generate_text(document, option)
+
+    elif option == '2':
+        try:
+            print()
+            print('Type in the name of a character you would like to ask about')
+            name = (input('Enter name:')).capitalize()
+            phrase_2_question = []
+            for chunk in doc.noun_chunks:
+                if len(chunk) > 1:
+                    if name in str(chunk):
+                        phrase_2_question.append(chunk)
+            print(f'{str(rd.choice(phrase_2_question)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}')
+        except:
+            print('Sorry, I could not find any information about this character')
+
 
 
 def main():
     file = input_file()
     analyze_file(file)
-    tokenize_generate_text(file)
+    menu_choice(file)
 
 
 main()
