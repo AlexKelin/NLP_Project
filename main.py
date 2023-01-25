@@ -105,7 +105,7 @@ def tokenize_generate_text(document, option):
                 adverb = str(rc(adverbs))
                 sentence_1 = f'{char_name.capitalize()} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
                 sentence_2 = f'{phrase_1_part.capitalize()} {phrase_2_part} {char_name} {rc(other_verbs)}'
-                sentence_3 = f'{char_name.capitalize()}, {rc(verbs_lemma)}{rc([".", "!", ","])} {phrase_1_part.capitalize()} {phrase_2_part} {conjunct} {phrase_1_part.lower()} {phrase_2_part}{punct} '
+                sentence_3 = f'{char_name.capitalize()}, {rc(verbs_lemma)}{rc([".", "!", ","])} {phrase_1_part.capitalize()} {phrase_2_part} {conjunct} {phrase_3} {punct} '
                 sentence_4 = f'{adject.capitalize()} {noun} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
                 sentence_5 = f'{adverb.capitalize()} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
                 sentence_6 = f'{char_name.capitalize()} and {phrase_1_part.lower()} {phrase_2_part} {verb} {phrase_3}'
