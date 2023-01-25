@@ -1,20 +1,28 @@
 import spacy
 from collections import Counter
-import random as rd
+
+from random import choice as rc
 
 
 def input_file():
     print('Welcome to the random text generator')
-    answer = input('Choose an option: \n1. Use test file \n2. Provide a url address for another txt.file \n')
-    if answer == '1':
-        doc = (open('corpus.txt', 'r', encoding='utf-8')).read()
-    elif answer == '2':
-        url = input('Please enter the url address of the file you would like to use: ')
-        doc = (open(url, 'r', encoding='utf-8')).read()
-    else:
+    print()
+    print('Choose an option: \n1. Use test file \n2. Provide a url address for another txt.file \n3. Exit program\n')
+    answer = input('Option #: ')
+    try:
+        if answer == '1':
+            doc = (open('corpus.txt', 'r', encoding='utf-8')).read()
+            return doc
+        elif answer == '2':
+            url = input('Please enter the url address of the file you would like to use: ')
+            doc = (open(url, 'r', encoding='utf-8')).read()
+            return doc
+        elif answer == '3' or answer == 'exit':
+            print('Thank you for using the program')
+            exit()
+    except TypeError:
         print('Please enter a valid option')
         input_file()
-    return doc
 
 
 def analyze_file(document):
@@ -31,11 +39,13 @@ def analyze_file(document):
     print('Number of unique words: ', len(set([token.text for token in doc if token.is_alpha])))
     print('Most common named entities: ', Counter(propers_nouns).most_common(5))
     print('Most common nouns: ', Counter(nouns).most_common(5))
-    print('-' * 110)
+    print('-' * 100)
 
 
 def menu_choice(document):
-    print('Please choose an option: \n1. Generate random sentences \n2. Ask about you favorite character')
+    print(
+        'Please choose an option: \n1. Generate random sentences \n2. Ask about your favorite character (if your file '
+        'contains a character name)')
     answer = input('Option #: ')
     if answer == '1' or answer == '2':
         print('Please wait...')
@@ -50,7 +60,6 @@ def tokenize_generate_text(document, option):
     nlp = spacy.load("en_core_web_sm")
     nlp.max_length = 1505477
     doc = nlp(document)
-    # make a list of all nouns
     nouns = list(set([token.text.lower() for token in doc if
                       token.is_stop != True and token.is_punct != True and token.pos_ == 'NOUN']))
     propers_nouns = list(set([token.text for token in doc if
@@ -73,14 +82,8 @@ def tokenize_generate_text(document, option):
     phrase = []
     for chunk in doc.noun_chunks:
         if len(chunk) > 2:
-            if str(chunk[0]) == 'a' or str(chunk[0]) == 'The' or str(chunk[0]) == 'A':
+            if str(chunk[0]) == 'a' or str(chunk[0]) == 'The' or str(chunk[0]) == 'A' or str(chunk[0]) == 'the':
                 phrase.append(chunk)
-    option_1 = f'{str(rd.choice(propers_nouns)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-    option_2 = f'{str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(propers_nouns))} {rd.choice(other_verbs)}'
-    option_3 = f'{str(rd.choice(propers_nouns)).capitalize()}, {rd.choice(verbs_lemma)}{rd.choice([".", "!", ","])} {str(rd.choice(phrase)).split()[0].capitalize()} {str(rd.choice(phrase)[1:])} {str(rd.choice(conjunctions))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}{rd.choice([".", "!", "?"])} '
-    option_4 = f'{str(rd.choice(adjectives).capitalize())} {str(rd.choice(nouns))} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-    option_5 = f'{str(rd.choice(adverbs)).capitalize()} {str(rd.choice(other_verbs))} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}'
-
 
     if option == '1':
         try:
@@ -89,9 +92,27 @@ def tokenize_generate_text(document, option):
             sent_num = input()
             print('Generating random sentences...')
             for i in range(int(sent_num)):
+                char_name = str(rc(propers_nouns))
+                verb = str(rc(verbs))
+                noun = str(rc(nouns))
+                other_verb = str(rc(other_verbs))
+                phrase_chunk = str(rc(phrase))
+                phrase_1_part = phrase_chunk.split()[0]
+                phrase_2_part = str(rc(phrase)[1:])
+                phrase_3 = str(rc(phrase))
+                conjunct = str(rc(conjunctions))
+                punct = rc([".", "!", "?"])
+                adject = str(rc(adjectives))
+                adverb = str(rc(adverbs))
+                sentence_1 = f'{char_name.capitalize()} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
+                sentence_2 = f'{phrase_1_part.capitalize()} {phrase_2_part} {char_name} {rc(other_verbs)}'
+                sentence_3 = f'{char_name.capitalize()}, {rc(verbs_lemma)}{rc([".", "!", ","])} {phrase_1_part.capitalize()} {phrase_2_part} {conjunct} {phrase_1_part.lower()} {phrase_2_part}{punct} '
+                sentence_4 = f'{adject.capitalize()} {noun} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
+                sentence_5 = f'{adverb.capitalize()} {other_verb} {phrase_1_part.lower()} {phrase_2_part}'
+                sentence_6 = f'{char_name.capitalize()} and {phrase_1_part.lower()} {phrase_2_part} {verb} {phrase_3}'
                 print()
-                print(rd.choice([option_1, option_2, option_3, option_4, option_5]))
-        except:
+                print(rc([sentence_1, sentence_2, sentence_3, sentence_4, sentence_5, sentence_6]))
+        except TypeError:
             print('Please enter a valid number')
             tokenize_generate_text(document, option)
 
@@ -100,15 +121,19 @@ def tokenize_generate_text(document, option):
             print()
             print('Type in the name of a character you would like to ask about')
             name = (input('Enter name:')).capitalize()
+            phrase_chunk = str(rc(phrase))
+            phrase_1_part = phrase_chunk.split()[0]
+            phrase_2_part = str(rc(phrase)[1:])
             phrase_2_question = []
             for chunk in doc.noun_chunks:
                 if len(chunk) > 1:
                     if name in str(chunk):
                         phrase_2_question.append(chunk)
-            print(f'{str(rd.choice(phrase_2_question)).capitalize()} {rd.choice(other_verbs)} {str(rd.choice(phrase)).split()[0].lower()} {str(rd.choice(phrase)[1:])}')
+
+            print(f'{str(rc(phrase_2_question))} {rc(other_verbs)} {phrase_1_part.lower()} {phrase_2_part}')
+
         except:
             print('Sorry, I could not find any information about this character')
-
 
 
 def main():
