@@ -1,6 +1,5 @@
 import spacy
 from collections import Counter
-
 from random import choice as rc
 
 
@@ -49,7 +48,7 @@ def menu_choice(document):
     answer = input('Option #: ')
     if answer == '1' or answer == '2':
         print('Please wait...')
-        tokenize_generate_text(document, answer)
+        return answer
     else:
         print('Please enter a valid option')
         menu_choice(document)
@@ -139,8 +138,8 @@ def tokenize_generate_text(document, option):
 def main():
     file = input_file()
     analyze_file(file)
-    menu_choice(file)
-
+    answer = menu_choice(file)
+    tokenize_generate_text(file, answer)
 
 main()
 if __name__ == 'main':
