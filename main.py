@@ -141,6 +141,5 @@ def main():
     answer = menu_choice(file)
     tokenize_generate_text(file, answer)
 
-main()
 if __name__ == 'main':
     main()
