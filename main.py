@@ -4,6 +4,7 @@ from random import choice as rc
 
 
 def input_file():
+    # sourcery skip: inline-immediately-returned-variable, merge-comparisons
     print('Welcome to the random text generator')
     print()
     print('Choose an option: \n1. Use test file \n2. Provide a url address for another txt.file \n3. Exit program\n')
@@ -141,6 +142,21 @@ def main():
     answer = menu_choice(file)
     tokenize_generate_text(file, answer)
 
-main()
+
 if __name__ == 'main':
     main()
+main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
